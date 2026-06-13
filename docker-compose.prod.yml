@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    # No ports exposed to host; Nginx will communicate via the Docker network
+    environment:
+      - DATABASE_URL=postgres://traceless:${DB_PASSWORD}@db:5432/traceless?sslmode=disable
+      - PORT=8080
+      - VIRTUAL_HOST=${DOMAIN}
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - default
+      - proxy-nw
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=traceless
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=traceless
+    # No ports exposed to host; only accessible by 'app' service
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docs/migrations:/docker-entrypoint-initdb.d
+    restart: always
+
+volumes:
+  postgres_data:
+
+networks:
+  proxy-nw:
+    external: true

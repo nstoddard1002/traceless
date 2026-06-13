@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>traceless.pw — Secure Secret Sharing</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/argon2-browser/1.18.0/argon2-bundled.min.js"></script>
+    <script src="/app.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>traceless.pw</h1>
+            <p>Share secrets. Leave nothing behind.</p>
+        </header>
+
+        <main id="app">
+            <!-- Views will be injected here -->
+            <div id="create-view" class="view">
+                <div class="card">
+                    <textarea id="secret-input" placeholder="Paste your secret here..."></textarea>
+                    
+                    <div class="options">
+                        <div class="option-group">
+                            <label for="expiry-select">Expires in</label>
+                            <select id="expiry-select">
+                                <option value="10">10 minutes</option>
+                                <option value="60">1 hour</option>
+                                <option value="1440" selected>24 hours</option>
+                                <option value="10080">7 days</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group">
+                            <label for="view-limit">View limit</label>
+                            <select id="view-limit">
+                                <option value="1" selected>1 view</option>
+                                <option value="3">3 views</option>
+                                <option value="5">5 views</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="passcode-toggle">
+                        <label>
+                            <input type="checkbox" id="passcode-enable"> Protect with passcode
+                        </label>
+                        <input type="password" id="passcode-input" placeholder="Enter passcode" class="hidden">
+                    </div>
+
+                    <button id="create-btn" class="btn-primary">Create Secure Link</button>
+                </div>
+            </div>
+
+            <div id="success-view" class="view hidden">
+                <div class="card">
+                    <h3>Secret Created!</h3>
+                    <p>Share this link with the recipient. It will expire and self-destruct according to your settings.</p>
+                    <div class="link-box">
+                        <input type="text" id="share-url" readonly>
+                        <button id="copy-btn">Copy</button>
+                    </div>
+                    <p class="warning">Warning: The encryption key is in the URL. Anyone with this link can access the secret.</p>
+                    <button id="new-secret-btn" class="btn-secondary">Create Another</button>
+                </div>
+            </div>
+
+            <div id="decrypt-view" class="view hidden">
+                <div class="card">
+                    <h3>Secure Secret</h3>
+                    <p id="decrypt-msg">A secure secret has been shared with you.</p>
+                    <div id="passcode-section" class="hidden">
+                        <input type="password" id="view-passcode" placeholder="Enter passcode">
+                    </div>
+                    <button id="view-btn" class="btn-primary">View Secret</button>
+                </div>
+            </div>
+
+            <div id="view-view" class="view hidden">
+                <div class="card">
+                    <textarea id="secret-output" readonly></textarea>
+                    <button id="copy-secret-btn">Copy Secret</button>
+                    <p class="warning">This secret will be destroyed after viewing.</p>
+                    <button id="view-new-btn" class="btn-secondary">Create Your Own</button>
+                </div>
+            </div>
+
+            <div id="error-view" class="view hidden">
+                <div class="card">
+                    <h3 id="error-title">Error</h3>
+                    <p id="error-msg">Something went wrong.</p>
+                    <button id="retry-btn" class="btn-primary">Try Again</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 traceless.pw — Open Source & Secure</p>
+        </footer>
+    </div>
+</body>
+</html>
